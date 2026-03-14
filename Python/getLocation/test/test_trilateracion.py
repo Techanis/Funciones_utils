@@ -5,8 +5,8 @@ def test_get_XY_con_ruido():
     # Semilla fija para que el test sea reproducible
     np.random.seed(123)
 
-    # Anclas en las esquinas de un cuadrado 10x10
-    anchors = np.array([(0, 0), (10, 0), (0, 10), (10, 10)])
+    # Anclas en las esquinas de un cuadrado 20x10
+    anchors = np.array([(0, 0), (20, 0), (0, 20), (20, 20)])
 
     # Punto real (ground truth)
     true_pos = np.array([3.5, 6.2])
@@ -14,15 +14,18 @@ def test_get_XY_con_ruido():
     # Distancias ideales
     true_distances = np.linalg.norm(anchors - true_pos, axis=1)
 
-    # Añadir ruido gaussiano (media 0, sigma en metros, por ejemplo 0.1 m)
+    # Añadir ruido gaussiano (media 0, sigma en metros, por ejemplo 1 m)
     noise_sigma = 1
     noise = np.random.normal(loc=0.0, scale=noise_sigma, size=true_distances.shape)
     noisy_distances = true_distances + noise
+    print("\nDistancias reales: ", true_distances)
+    print("Distancias ruidosas:", noisy_distances)
+
 
     # Posición estimada a partir de distancias ruidosas
     estimated = get_XY(anchors, noisy_distances)
 
-    # Error máximo permitido (por ejemplo, 0.3 m)
+    # Error máximo permitido (por ejemplo, 0.5 m)
     max_position_error = 0.5
     error = np.linalg.norm(estimated - true_pos)
     
